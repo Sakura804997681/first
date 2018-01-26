@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<!-- 详细配置【http://www.jianshu.com/p/e09d2370b796】 -->
+<generatorConfiguration>
+
+	<!--指定特定数据库的jdbc驱动jar包的位置 -->
+	<!--<classPathEntry location="D:\\mysql-connector-java-5.1.28-bin.jar"/> -->
+
+	<context id="default" targetRuntime="MyBatis3">
+		<!-- 这里的type里写的是你的实现类的类全路径 -->
+		<commentGenerator type="com.apps.test.RemarksCommentGenerator">
+			<property name="suppressDate" value="true" />
+			<!-- 是否去除自动生成的注释 true：是 ： false:否 -->
+			<property name="suppressAllComments" value="false" />
+		</commentGenerator>
+
+		<!--jdbc的数据库连接 -->
+		<jdbcConnection driverClass="com.mysql.jdbc.Driver"
+			connectionURL="jdbc:mysql://localhost:3306/appinfodb" userId="root"
+			password="root">
+		</jdbcConnection>
+
+		<!-- 非必需，类型处理器，在数据库类型和java类型之间的转换控制 -->
+		<javaTypeResolver>
+			<property name="forceBigDecimals" value="false" />
+		</javaTypeResolver>
+
+		<!-- model class -->
+		<javaModelGenerator targetPackage="com.apps.pojo"
+			targetProject="src">
+			<property name="enableSubPackages" value="true" />
+			<property name="trimStrings" value="true" />
+		</javaModelGenerator>
+
+		<!-- mybatis file -->
+		<!-- <sqlMapGenerator targetPackage="com.liuh.appsys.dao" targetProject="src"> 
+			<property name="enableSubPackages" value="false" /> </sqlMapGenerator> -->
+
+		<!-- mapper xml class -->
+		<!-- <javaClientGenerator type="XMLMAPPER" targetPackage="com.liuh.appsys.dao" 
+			targetProject="src"> <property name="enableSubPackages" value="true" /> </javaClientGenerator> -->
+
+
+		<!--不生成帮助类（Exmaples） -->
+		<!-- enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" 
+			enableSelectByExample="false" selectByExampleQueryId="false" -->
+		<!--已生成的表 <table schema="demo" tableName="USER" domainObjectName="User"></table> -->
+		<table schema="appinfodb" tableName="dev_user">
+			<!-- 驼峰命名 -->
+			<property name="useActualColumnNames" value="true" />
+		</table>
+		<table schema="appinfodb" tableName="backend_user">
+			<!-- 驼峰命名 -->
+			<property name="useActualColumnNames" value="true" />
+		</table>
+		<table schema="appinfodb" tableName="app_info">
+			<!-- 驼峰命名 -->
+			<property name="useActualColumnNames" value="true" />
+		</table>
+		<table schema="appinfodb" tableName="app_category">
+			<!-- 驼峰命名 -->
+			<property name="useActualColumnNames" value="true" />
+		</table>
+		<table schema="appinfodb" tableName="data_dictionary">
+			<!-- 驼峰命名 -->
+			<property name="useActualColumnNames" value="true" />
+		</table>
+		<table schema="appinfodb" tableName="app_version">
+			<!-- 驼峰命名 -->
+			<property name="useActualColumnNames" value="true" />
+		</table>
+	</context>
+</generatorConfiguration>

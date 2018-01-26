@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.apps.dao.AppCateMapper">
+	
+	<!-- 根据Id 查询 -->
+	<select id="getAppCateByCateId" resultType="appCategory">
+		select id,parentId,categoryCode,categoryName from app_category 
+		<trim prefix="where">
+			<if test="parentId==0">parentId is null </if>
+			<if test="parentId!=0">parentId=#{parentId}</if>
+		</trim>
+	</select>
+</mapper>
