@@ -14,7 +14,7 @@ import com.apps.tools.MyConstants;
 
 /**
  * @note 开发者登陆处理
- * @author  
+ * @author  long
  * */
 @Controller
 @RequestMapping("/dev")
@@ -33,7 +33,7 @@ public class DevLoginController {
 	
 	/**
 	 * @note 登陆处理
-	 * @author  
+	 * @author
 	 * */
 	@RequestMapping("/doLogin")
 	public String doLogin(DevUser dev,HttpSession session,Model model) {
