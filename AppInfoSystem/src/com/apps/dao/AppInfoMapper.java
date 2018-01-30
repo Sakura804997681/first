@@ -23,5 +23,12 @@ public interface AppInfoMapper {
 	 * @author  
 	 * */
 	public int getAppInfoCount(AppInfo appInfo);
-	
+	/**
+	 * add appInfo
+	 */
+	public int addAppInfo(AppInfo app);
+	/**
+	 * 存在验证
+	 */
+	public int exist(String name);
 }

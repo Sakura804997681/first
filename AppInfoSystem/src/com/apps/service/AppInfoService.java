@@ -18,4 +18,12 @@ public interface AppInfoService {
 	 * @author  
 	 * */
 	public PageSupport getAppInfos(AppInfo appInfo,int currentPageNo,int pageSize);
+	/**
+	 * 存在验证
+	 */
+	public int exist(String name);
+	/**
+	 * 添加 appinfo
+	 */
+	public int addappInfo(AppInfo a);
 }

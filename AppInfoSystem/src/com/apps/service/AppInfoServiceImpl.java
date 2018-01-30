@@ -40,4 +40,16 @@ public class AppInfoServiceImpl implements AppInfoService{
 		return page;
 	}
 
+	@Override
+	public int exist(String name) {
+		// TODO Auto-generated method stub
+		return appInfoMapper.exist(name);
+	}
+
+	@Override
+	public int addappInfo(AppInfo a) {
+		// TODO Auto-generated method stub
+		return appInfoMapper.addAppInfo(a);
+	}
+
 }

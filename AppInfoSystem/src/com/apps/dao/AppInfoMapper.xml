@@ -25,6 +25,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="appInfo.categoryLevel2!=null">and a1.categoryLevel2=#{appInfo.categoryLevel2}</if>
 			<if test="appInfo.categoryLevel3!=null">and a1.categoryLevel3=#{appInfo.categoryLevel3}</if>
 		</trim>
+		ORDER BY creationDate DESC 
 		LIMIT #{currentPageNo},#{pageSize}
 	</select>
 	
@@ -40,5 +41,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="categoryLevel3!=null">and a1.categoryLevel3=#{categoryLevel3}</if>
 		</trim>
 	</select>
-	
+	<!-- 查询是否存在 -->
+	<select id="exist" parameterType="string" resultType="int">
+	select count(1) from app_info where APKName=#{name}
+	</select>
+	<!-- 添加 -->
+	<insert id="addAppInfo" parameterType="appInfo">
+	insert app_info (softwareName,APKName,supportROM,interfaceLanguage,softwareSize,updateDate,devId,appInfo,status,onSaleDate,offSaleDate,flatformId,categoryLevel3,downloads,createdBy,creationDate,modifyBy,modifyDate,categoryLevel1,categoryLevel2,logoPicPath,logoLocPath,versionId)
+	values(#{softwareName},#{APKName},#{supportROM},#{interfaceLanguage},#{softwareSize},#{updateDate},#{devId},#{appInfo},#{status},#{onSaleDate},#{offSaleDate},#{flatformId},#{categoryLevel3},#{downloads},#{createdBy},#{creationDate},#{modifyBy},#{modifyDate},#{categoryLevel1},#{categoryLevel2},#{logoPicPath},#{logoLocPath},#{versionId})
+	</insert>
 </mapper>
