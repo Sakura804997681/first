@@ -46,7 +46,10 @@ public class ManageLoginController {
 		return "backendlogin";
 	}
 	@RequestMapping("/main")
-	public String main(){
+	public String main(HttpSession session){
+		if(session.getAttribute(MyConstants.USER_SESSION)!=null){
 		return "backend/main";
+		}
+		return "redirect:/manager/loginV";
 	}
 }
