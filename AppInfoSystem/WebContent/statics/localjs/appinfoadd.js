@@ -55,11 +55,15 @@ $("#categoryLevel2").change(function(){
 	}
 });
 
-$("#back").on("click",function(){
-	window.location.href = "list";
+$("#back").bind("click",function(){
+	window.location.href = "appList";
 });
-$("#submit").on("click",function(){
-	if($("APKName").attr("ok")=="true"){
+$("#add").bind("click",function(){
+	var soft=$("#softwareName").val();
+	if(soft==null||soft.trim()==''){
+		return;
+	}
+	if($("#APKName").attr("ok")=="true"){
 		$("#fo").submit();
 	}
 });

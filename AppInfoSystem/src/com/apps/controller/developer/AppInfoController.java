@@ -55,19 +55,12 @@ public class AppInfoController {
 	public String appInfo(AppInfo appInfo,@RequestParam(value="pageIndex",required=false)Integer currentPageNo,Model model) {
 		currentPageNo=currentPageNo==null?1:currentPageNo;
 		PageSupport page=infoService.getAppInfos(appInfo,currentPageNo,MyConstants.pageSize);
-		List<DataDictionary> status=dictionaryService.getDictionaryByType("APP_STATUS");
-		List<DataDictionary> flatForm=dictionaryService.getDictionaryByType("APP_FLATFORM");
-		List<AppCategory> cate1=appCateService.getAppCateByCateId(0L);
-		List<AppCategory> cate2=appCateService.getAppCateByCateId(appInfo.getCategoryLevel1());
-		List<AppCategory> cate3=appCateService.getAppCateByCateId(appInfo.getCategoryLevel2());
+		List<DataDictionary> status=dictionaryService.getDictionaryByType("APP_STATUS");	
 		//
 		model.addAttribute("appInfoList",page.getData());
 		model.addAttribute("pages",page);
 		model.addAttribute("statusList",status);
-		model.addAttribute("flatFormList", flatForm);
-		model.addAttribute("categoryLevel1List",cate1);
-		model.addAttribute("categoryLevel2List", cate2);
-		model.addAttribute("categoryLevel3List",cate3);
+		load(appInfo,model);
 		//
 		model.addAttribute("appInfo",appInfo);
 		return "/developer/appinfolist";
@@ -122,14 +115,7 @@ public class AppInfoController {
 	 */
 	@RequestMapping(value="/appinfoadd",method=RequestMethod.GET)
 	public String add(AppInfo appInfo,Model model){
-		List<DataDictionary> flatForm=dictionaryService.getDictionaryByType("APP_FLATFORM");
-		List<AppCategory> cate1=appCateService.getAppCateByCateId(0L);
-		List<AppCategory> cate2=appCateService.getAppCateByCateId(appInfo.getCategoryLevel1());
-		List<AppCategory> cate3=appCateService.getAppCateByCateId(appInfo.getCategoryLevel2());
-		model.addAttribute("flatFormList", flatForm);
-		model.addAttribute("categoryLevel1List",cate1);
-		model.addAttribute("categoryLevel2List", cate2);
-		model.addAttribute("categoryLevel3List",cate3);
+		load(appInfo,model);
 		//
 		model.addAttribute("appInfo",appInfo);
 		return "developer/appinfoadd";
@@ -138,6 +124,7 @@ public class AppInfoController {
 	public String addp(AppInfo appInfo,@RequestParam("logo")MultipartFile a,HttpSession session,Model m){
 		String path=session.getServletContext().getRealPath("statics"+File.separator+"uploadfiles");
 		String PicPath=null;
+		String allpath=null;
 		if(!a.isEmpty()){
 			boolean error=false;
 			String e="error";
@@ -155,9 +142,9 @@ public class AppInfoController {
 				}
 				try {
 					a.transferTo(f);
-					String allpath=session.getServletContext().getContextPath()+File.separator+"statics"+File.separator+"uploadfiles"
+					PicPath=session.getServletContext().getContextPath()+File.separator+"statics"+File.separator+"uploadfiles"
 							+File.separator+filename;
-					PicPath=allpath;
+					allpath=path+File.separator+filename;
 					System.out.println("filepath====>"+allpath);
 				} catch (IllegalStateException | IOException e1) {
 					error=true;
@@ -170,6 +157,7 @@ public class AppInfoController {
 			}
 			if(!error){
 				appInfo.setLogoPicPath(PicPath);
+				appInfo.setLogoLocPath(allpath);
 				DevUser u=(DevUser)session.getAttribute(MyConstants.DEV_USER_SESSION);
 				appInfo.setCreatedBy(u.getId());
 				appInfo.setCreationDate(new Date());
@@ -177,7 +165,83 @@ public class AppInfoController {
 				return "redirect:/dev/app/appList";
 			}
 		}
+		load(appInfo,m);
 		return "developer/appinfoadd";
 	}
-	
+	/**
+	 * appinfo modify
+	 */
+	@RequestMapping(value="/appinfomodify",method=RequestMethod.GET)
+	public String modify(@RequestParam int id,Model m){
+		AppInfo a=infoService.getOne(id);
+		m.addAttribute("appInfo",a);
+		load(a,m);
+		return "developer/appinfomodify";
+	}
+	@RequestMapping(value="/appinfomodify",method=RequestMethod.POST)
+	public String mo(AppInfo appInfo,@RequestParam(value="logo",required=false)MultipartFile a,
+			@RequestParam("save")Integer save,Model m,HttpSession session){
+		System.out.println("+++");
+		String path=session.getServletContext().getRealPath("statics"+File.separator+"uploadfiles");
+		String PicPath=null;
+		String allpath=null;
+		boolean error=false;
+		if(a!=null&&!a.isEmpty()){
+			String e="error";
+			String oldname=a.getOriginalFilename();
+			String suffix=FilenameUtils.getExtension(oldname);
+			int filesize=500000;
+			if(a.getSize()>filesize){
+				m.addAttribute(e, "*上传大小不得超过500KB");
+				error=true;
+			}else if(suffix.equalsIgnoreCase("jpg")||suffix.equalsIgnoreCase("png")||suffix.equalsIgnoreCase("jpeg")||suffix.equalsIgnoreCase("pneg")){
+				String filename=System.currentTimeMillis()+RandomUtils.nextInt(1000000)+"_Personal.jpg";
+				File f=new File(path,filename);
+				if(!f.exists()){
+					f.mkdirs();
+				}
+				try {
+					a.transferTo(f);
+					PicPath=session.getServletContext().getContextPath()+File.separator+"statics"+File.separator+"uploadfiles"
+							+File.separator+filename;
+					allpath=path+File.separator+filename;
+					File df=new File(appInfo.getLogoLocPath());
+					if(df.exists()){df.delete();}
+					appInfo.setLogoPicPath(PicPath);
+					appInfo.setLogoLocPath(allpath);
+					System.out.println("filepath====>"+allpath);
+				} catch (IllegalStateException | IOException e1) {
+					error=true;
+					m.addAttribute(e, "*上传失败！");
+					e1.printStackTrace();
+				}
+			}else{
+				m.addAttribute(e, "*上传图片格式必须是jpg、png、jpeg、pneg");
+				error=true;
+			}		
+		}
+		if(!error){
+			DevUser u=(DevUser)session.getAttribute(MyConstants.DEV_USER_SESSION);
+			appInfo.setModifyBy(u.getId());
+			appInfo.setModifyDate(new Date());
+			if(save==1){appInfo.setStatus(1L);}
+			infoService.update(appInfo);
+			return "redirect:/dev/app/appList";
+		}
+		load(appInfo,m);
+		return "developer/appinfomodify";
+	}
+	/**
+	 * 加载平台和分类
+	 */
+	public void load(AppInfo a,Model m){
+		List<DataDictionary> flatForm=dictionaryService.getDictionaryByType("APP_FLATFORM");
+		List<AppCategory> cate1=appCateService.getAppCateByCateId(0L);
+		List<AppCategory> cate2=appCateService.getAppCateByCateId(a.getCategoryLevel1());
+		List<AppCategory> cate3=appCateService.getAppCateByCateId(a.getCategoryLevel2());
+		m.addAttribute("flatFormList", flatForm);
+		m.addAttribute("categoryLevel1List",cate1);
+		m.addAttribute("categoryLevel2List", cate2);
+		m.addAttribute("categoryLevel3List",cate3);
+	}
 }

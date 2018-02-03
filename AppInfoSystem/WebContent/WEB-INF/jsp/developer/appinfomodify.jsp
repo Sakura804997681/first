@@ -4,7 +4,7 @@
 <div class="clearfix"></div>
  <div class="x_content">
                     <br />
-                    <form enctype="multipart/form-data" id="fo" method="post" action="${pageContext.request.contextPath }/dev/app/appinfoadd" data-parsley-validate class="form-horizontal form-label-left">
+                    <form enctype="multipart/form-data" id="fo" method="post" action="${pageContext.request.contextPath }/dev/app/appinfomodify" data-parsley-validate class="form-horizontal form-label-left">
 
                       <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="softwareName">软件名称 <span class="required">*</span>
@@ -17,7 +17,7 @@
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="APKName">APK名称 <span class="required">*</span>
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                          <input type="text" id="APKName" ok="false" name="APKName" value="${appInfo.APKName }" placeholder="请输入APK名称" required="required" class="form-control col-md-7 col-xs-12">
+                          <input type="text" id="APKName" readonly="readonly" name="APKName" value="${appInfo.APKName }" placeholder="请输入APK名称" required="required" class="form-control col-md-7 col-xs-12">
                           <span></span>
                         </div>
                       </div>
@@ -113,7 +113,8 @@
                         <label class="control-label col-md-3 col-sm-3 col-xs-12"  >APP状态 <span class="required">*</span>
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                          <input type="hidden" name="status" value="1">待审核
+                        <c:if test="${appInfo.status==1 }"><input type="hidden" name="status" value="1"><input type="text" readonly="readonly" class="form-control col-md-7 col-xs-12" value="待审核"></c:if>
+                        <c:if test="${appInfo.status==3 }"><input type="hidden" name="status" value="3"><input type="text" readonly="readonly" class="form-control col-md-7 col-xs-12" value="审核未通过"></c:if>
                         </div>
                       </div>
                       <div class="form-group">
@@ -129,13 +130,20 @@
                         <label class="control-label col-md-3 col-sm-3 col-xs-12"  >LOGO图片 <span class="required">*</span>
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                          <input type="file" name="logo"  required="required" class="form-control col-md-7 col-xs-12">
+                          <input type="hidden" name="logo" class="form-control col-md-7 col-xs-12">
                           <span style="color:red">${error }</span>
+                         <div id="logo"><img src="${appInfo.logoPicPath }"/><a id="dellogo">删除</a></div>
                         </div>
                       </div>
                       <div class="form-group">
+                      <input type="hidden" name="id" value="${appInfo.id }"/>
+                      <input type="hidden" name="logoLocPath" value="${appInfo.logoLocPath }">
+                      <input type="hidden" name="save" value="0">
                         <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
-                          <input id="add" type="button" class="btn btn-success" value="add"/>
+                        <c:if test="${appInfo.status==3 }">
+                        <button id="add2" type="button" class="btn btn-success">保存并再次提交审核</button>
+                        </c:if>
+                          <button id="add" type="button" class="btn btn-success">保存</button>  
                           <button id="back" type="button" class="btn btn-primary">返回</button>
                         </div>
                       </div>
@@ -143,4 +151,4 @@
                     </form>
                   </div>
 <%@include file="common/footer.jsp"%>
-<script type="text/javascript" src="${pageContext.request.contextPath }/statics/localjs/appinfoadd.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath }/statics/localjs/appinfomodify.js"></script>

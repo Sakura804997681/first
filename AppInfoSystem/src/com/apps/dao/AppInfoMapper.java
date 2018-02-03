@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import com.apps.pojo.AppInfo;
+import com.apps.pojo.AppVersion;
 
 /**
  * @note appInfo Dao
@@ -31,4 +32,16 @@ public interface AppInfoMapper {
 	 * 存在验证
 	 */
 	public int exist(String name);
+	/**
+	 * 查单个
+	 */
+	public AppInfo getone(int id);
+	/**
+	 * 修改
+	 */
+	public int update(AppInfo a);
+	/**
+	 * version
+	 */
+	public AppVersion getVersion(Long id);
 }

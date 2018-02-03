@@ -3,6 +3,7 @@ package com.apps.service;
 import java.util.List;
 
 import com.apps.pojo.AppInfo;
+import com.apps.pojo.AppVersion;
 import com.apps.tools.PageSupport;
 
 /**
@@ -26,4 +27,13 @@ public interface AppInfoService {
 	 * 添加 appinfo
 	 */
 	public int addappInfo(AppInfo a);
+	/**
+	 * 查单个
+	 */
+	public AppInfo getOne(int id);
+	/**
+	 * 修改
+	 */
+	public int update(AppInfo a);
+	public AppVersion getversion(Long id);
 }

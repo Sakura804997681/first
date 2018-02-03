@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.apps.dao.AppInfoMapper;
 import com.apps.pojo.AppInfo;
+import com.apps.pojo.AppVersion;
 import com.apps.tools.PageSupport;
 
 /**
@@ -32,6 +33,8 @@ public class AppInfoServiceImpl implements AppInfoService{
 	public PageSupport getAppInfos(AppInfo appInfo,int currentPageNo,int pageSize) {
 		List<AppInfo> data=appInfoMapper.findAppInfoList(appInfo,(currentPageNo-1)*pageSize,pageSize);
 		int count=appInfoMapper.getAppInfoCount(appInfo);
+		System.out.println("===========================>count"+count+
+				"|"+appInfo.getStatus());
 		PageSupport page=new PageSupport();
 		page.setData(data);
 		page.setPageSize(pageSize);
@@ -50,6 +53,24 @@ public class AppInfoServiceImpl implements AppInfoService{
 	public int addappInfo(AppInfo a) {
 		// TODO Auto-generated method stub
 		return appInfoMapper.addAppInfo(a);
+	}
+
+	@Override
+	public AppInfo getOne(int id) {
+		// TODO Auto-generated method stub
+		return appInfoMapper.getone(id);
+	}
+
+	@Override
+	public int update(AppInfo a) {
+		// TODO Auto-generated method stub
+		return appInfoMapper.update(a);
+	}
+
+	@Override
+	public AppVersion getversion(Long id) {
+		// TODO Auto-generated method stub
+		return appInfoMapper.getVersion(id);
 	}
 
 }
